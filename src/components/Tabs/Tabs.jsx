@@ -14,24 +14,28 @@ export const Tabs = ({ tabs, activeTabId, onTabSelected }) => {
     const isActive = tabId === activeTab.id;
 
     // Only call onTabSelected if a different (non-active) tab is clicked
-    if (!isActive) {
+    if (!isActive && typeof onTabSelected === 'function') {
       onTabSelected(tabId);
     }
   };
 
   return (
     <div data-cy="TabsComponent">
-      <div className="tabs is-boxed">
+      <div className="tabs is-boxed" role="tablist">
         <ul>
           {tabs.map(tab => (
             <li
               key={tab.id}
               className={tab.id === activeTab.id ? 'is-active' : ''}
               data-cy="Tab"
+              role="presentation"
             >
               <a
                 href={`#${tab.id}`}
                 data-cy="TabLink"
+                role="tab"
+                aria-selected={tab.id === activeTab.id}
+                aria-controls={`panel-${tab.id}`}
                 onClick={event => {
                   event.preventDefault();
                   handleTabClick(tab.id);
@@ -44,7 +48,13 @@ export const Tabs = ({ tabs, activeTabId, onTabSelected }) => {
         </ul>
       </div>
 
-      <div className="block" data-cy="TabContent">
+      <div
+        className="block"
+        data-cy="TabContent"
+        role="tabpanel"
+        id={`panel-${activeTab.id}`}
+        aria-labelledby={activeTab.id}
+      >
         {activeTab.content}
       </div>
     </div>
