@@ -10,8 +10,11 @@ export const Tabs = ({ tabs, activeTabId, onTabSelected }) => {
   const activeTab = tabs.find(tab => tab.id === activeTabId) || tabs[0];
 
   const handleTabClick = tabId => {
-    // Only call onTabSelected if a different tab is clicked
-    if (tabId !== activeTabId) {
+    // Compare against the resolved active tab's id, not the incoming activeTabId
+    const isActive = tabId === activeTab.id;
+
+    // Only call onTabSelected if a different (non-active) tab is clicked
+    if (!isActive) {
       onTabSelected(tabId);
     }
   };
